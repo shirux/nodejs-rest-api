@@ -36,3 +36,14 @@ npm start
 ```
 
 To test the Express server, browse to the URL [http://localhost:5000/](http://localhost:5000/).
+
+## Skills Used
+- Javascript
+- NodeJs
+- API REST
+- Sequelize
+
+## Goind for exceeds
+In this project, you will find some fields excluded in some request. Also, if user is not registered on course, he will get
+a 403 authorization request.
+

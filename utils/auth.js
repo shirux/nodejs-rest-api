@@ -4,9 +4,6 @@ const auth = require('basic-auth');
 
 /**
  * Authenticate User middleware, taken from course examples at treehouse
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
  */
 const authenticateUser = async (req, res, next) => {
     let message = null;

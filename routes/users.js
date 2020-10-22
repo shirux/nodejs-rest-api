@@ -6,7 +6,9 @@ const authenticateUser = require('../utils/auth');
 const router = express.Router();
 const User = require('../models').User;
 
-// Handler function to wrap each route.
+/**
+ * Util Function taken from treehouse examples
+ */
 function asyncHandler(cb) {
   return async (req, res, next) => {
     try {
@@ -24,7 +26,7 @@ function asyncHandler(cb) {
 router.get('/', authenticateUser, asyncHandler(async (req, res) => {
     const users = await User.findAll({
       attributes: {
-        exclude: ['createdAt', 'updatedAt']
+        exclude: ['createdAt', 'updatedAt', 'password']
       }
     });
     res.json(users);
