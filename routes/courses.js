@@ -5,25 +5,8 @@ const router = express.Router();
 const Course = require('../models').Course;
 const User = require('../models').User;
 const authenticateUser = require('../utils/auth');
-
-// Handler function to wrap each route.
-function asyncHandler(cb) {
-  return async (req, res, next) => {
-    try {
-      await cb(req, res, next);
-    } catch (error) {
-      if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
-        const errors = error.errors.map(err => err.message);
-        res.status(400).json({ errors });
-      }
-      else {
-        next(error);
-      }
-      // Forward error to the global error handler
-     
-    }
-  }
-}
+const asyncHandler = require('./utils');
+const MissingFieldException = require('../utils/exceptions');
 
 /**
  *  GET method that retrieves a list of courses with its related students
@@ -70,9 +53,10 @@ router.get('/:id', asyncHandler(async (req, res) => {
  * POST method that creates a new course
  */
 router.post('/', authenticateUser, asyncHandler(async (req, res) => {
-  const course = req.body
-  await Course.create(course);
-  res.status(201).json({course});
+  const course = await Course.create(req.body)
+  res.status(201).set({
+    location: `/api/courses/${course.id}`
+  }).end()
 }));
 
 /**
@@ -83,6 +67,12 @@ router.put('/:id', authenticateUser, asyncHandler(async (req, res) => {
   if (course) {
     const user = await User.findByPk(course.userId)
     if (req.currentUser.id === user.id) {
+      if (req.body.title == null) {
+        throw new MissingFieldException('title')
+      }
+      if (req.body.description == null) {
+        throw new MissingFieldException('title')
+      }
       await course.update(req.body);
       res.status(204).json()
     } else {
