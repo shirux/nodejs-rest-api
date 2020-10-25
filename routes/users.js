@@ -25,15 +25,17 @@ router.get('/', authenticateUser, asyncHandler(async (req, res) => {
  * POST route to create a new user
  */
 router.post('/', asyncHandler(async (req, res) => {
- // Grab user and hash password
- const user = req.body;
- if (user.password) {
-  user.password = bcryptjs.hashSync(user.password);
- }
- 
- // Create and return a 201
- await User.create(user)
- res.status(201).json(user)
+  // Grab user and hash password
+  const user = req.body;
+  if (user.password) {
+    user.password = bcryptjs.hashSync(user.password);
+  }
+  
+  // Create and return a 201
+  await User.create(user)
+  res.status(201).set({
+    location: `/`
+  }).end()
 }));
 
 module.exports = router;
