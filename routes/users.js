@@ -33,9 +33,7 @@ router.post('/', asyncHandler(async (req, res) => {
   
   // Create and return a 201
   await User.create(user)
-  res.status(201).set({
-    location: `/`
-  }).end()
+  res.status(201).location('/').end()
 }));
 
 module.exports = router;
